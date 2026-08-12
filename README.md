@@ -14,27 +14,21 @@ Queries the opencode SQLite database and prints a styled, card-style list of rec
 ## Setup
 
 ```bash
-git clone <repo-url> ~/.local/share/ocls
-cd ~/.local/share/ocls
+cd /path/to/ocls
 bundle install
 ```
 
 ## Usage
 
 ```bash
-# Via binstub
 bin/ocls          # Show 15 most recent sessions
 bin/ocls 30       # Show 30 most recent sessions
-
-# Via bundle exec
-bundle exec ocls
-bundle exec ocls 30
+bin/ocls version  # Print version
 ```
 
 ## Development
 
 ```bash
-bundle install
 bundle exec rake        # Run tests + linting
 bundle exec rspec       # Tests only
 bundle exec rubocop     # Linting only
@@ -57,4 +51,4 @@ bundle exec rubocop     # Linting only
 
 ## License
 
-Personal use. Do whatever you want with it.
+MIT
