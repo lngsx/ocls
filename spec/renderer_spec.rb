@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Ocls::Presenter do
+RSpec.describe Ocls::Renderer do
   let(:pastel) { Pastel.new(enabled: false) }
-  let(:presenter) { described_class.new(width: 80, pastel: pastel) }
+  let(:renderer) { described_class.new(width: 80, pastel: pastel) }
 
   describe '#render' do
     let(:sessions) do
@@ -19,7 +19,7 @@ RSpec.describe Ocls::Presenter do
     end
 
     it 'renders a card with separator, title, agent/model, tokens/cost, location' do
-      output = presenter.render(sessions)
+      output = renderer.render(sessions)
 
       expect(output).to include('Test Session')
       expect(output).to include('Agent: H')
@@ -30,7 +30,7 @@ RSpec.describe Ocls::Presenter do
     end
 
     it 'uses Unicode box-drawing separator' do
-      output = presenter.render(sessions)
+      output = renderer.render(sessions)
 
       expect(output).to include("\u2500" * 80)
     end
@@ -44,20 +44,20 @@ RSpec.describe Ocls::Presenter do
         tokens: 123_456,
         cost: 0.01
       )
-      output = presenter.render([big_session])
+      output = renderer.render([big_session])
 
       expect(output).to include('Tokens: 123,456')
     end
 
     it 'formats cost to 4 decimal places' do
-      output = presenter.render(sessions)
+      output = renderer.render(sessions)
 
       expect(output).to include('Cost: $0.0123')
     end
 
     context 'with empty sessions' do
       it 'returns empty string' do
-        expect(presenter.render([])).to eq('')
+        expect(renderer.render([])).to eq('')
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe Ocls::Presenter do
           tokens: 0,
           cost: 0.0
         )
-        output = presenter.render([session])
+        output = renderer.render([session])
 
         expect(output).to include('...')
         expect(output).not_to include(long_title)
@@ -90,7 +90,7 @@ RSpec.describe Ocls::Presenter do
           tokens: 0,
           cost: 0.0
         )
-        output = presenter.render([session])
+        output = renderer.render([session])
 
         expect(output).to include('Location:')
         # The location line should be truncated
@@ -104,7 +104,7 @@ RSpec.describe Ocls::Presenter do
           Ocls::Session.new(title: 'First', location: '/a', agent: 'H', model: 'x', tokens: 0, cost: 0.0),
           Ocls::Session.new(title: 'Second', location: '/b', agent: 'H', model: 'x', tokens: 0, cost: 0.0)
         ]
-        output = presenter.render(sessions)
+        output = renderer.render(sessions)
 
         expect(output.scan("\u2500" * 80).length).to eq(2)
         expect(output).to include('First')

@@ -11,10 +11,12 @@ The project is implemented and working. Your job is to maintain it, fix bugs, an
 ## Architecture
 
 - `bin/ocls` — executable entry point
-- `lib/ocls/cli.rb` — Thor CLI, handles `list [LIMIT]` and `version` commands
-- `lib/ocls/database.rb` — SQLite3 query layer against `~/.local/share/opencode/opencode.db`
-- `lib/ocls/presenter.rb` — card-style styled terminal output (80 cols, pastel gem)
-- `lib/ocls/session.rb` — Session struct (title, location, agent, model, tokens, cost)
+- `app/cli.rb` — Thor CLI, handles `list [LIMIT]` and `version` commands
+- `app/database.rb` — SQLite3 query layer against `~/.local/share/opencode/opencode.db`
+- `app/renderer.rb` — card-style styled terminal output (80 cols, pastel gem)
+- `app/structs.rb` — Session struct (title, location, agent, model, tokens, cost)
+- `version.rb` — VERSION constant
+- `lib/ocls.rb` — thin loader, requires from app/
 
 ## Scope Boundaries
 
@@ -32,16 +34,17 @@ The project is implemented and working. Your job is to maintain it, fix bugs, an
 
 ## Key Decisions
 
-1. **Ruby** with full project structure (`lib/`, `bin/`, `spec/`)
+1. **Ruby** with `app/` based structure (Rails-inspired)
 2. **Gems:** sqlite3, thor, pastel, tty-screen
 3. **RSpec** for testing, **RuboCop** for linting
 4. **Fixed 80-col width** — not responsive, truncates with `...`
 5. **Card-style output** — dim separator lines, bold cyan titles
+6. **Flat specs** — all specs in `spec/` root, no subdirectories
 
 ## How to Work
 
 1. Run `bundle exec rake` to verify tests + linting pass before and after changes.
-2. Test against the real DB at `~/.local/share/opencode/opencode.db` when touching Database or Presenter.
+2. Test against the real DB at `~/.local/share/opencode/opencode.db` when touching Database or Renderer.
 3. Don't skip tests — this project uses RSpec properly.
 4. Don't use raw ANSI codes when `pastel` handles it cleanly.
 

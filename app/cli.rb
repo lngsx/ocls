@@ -13,8 +13,8 @@ module Ocls
 
       db = Database.new
       sessions = db.recent_sessions(limit: limit)
-      presenter = Presenter.new
-      $stdout.print presenter.render(sessions)
+      renderer = Renderer.new
+      $stdout.print renderer.render(sessions)
     rescue DatabaseNotFoundError => e
       warn e.message
       exit 1

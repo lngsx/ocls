@@ -30,13 +30,13 @@ files:
   - - lib/ocls.rb
     - Main module, requires all components
     - light
-    - purpose: Single require point. Loads version, session, database, presenter, cli in order.
+    - purpose: Single require point. Loads version, structs, database, renderer, cli in order.
       key_concepts:
         - require_relative load order
       key_exports:
         - Ocls module
 
-  - - lib/ocls/cli.rb
+  - - app/cli.rb
     - Thor CLI with list and version commands
     - light
     - purpose: Defines the user-facing command interface. Handles argument parsing and orchestration.
@@ -49,10 +49,10 @@ files:
         - list [LIMIT] command (default 15)
         - version command
       reads_from:
-        - lib/ocls/database.rb
-        - lib/ocls/presenter.rb
+        - app/database.rb
+        - app/renderer.rb
 
-  - - lib/ocls/database.rb
+  - - app/database.rb
     - SQLite3 query layer against opencode DB
     - light
     - purpose: Opens the opencode database, runs the session query, maps rows to Session structs.
@@ -65,9 +65,9 @@ files:
         - Ocls::Database.new(db_path?).recent_sessions(limit:)
         - Ocls::DatabaseNotFoundError
       reads_from:
-        - lib/ocls/session.rb
+        - app/structs.rb
 
-  - - lib/ocls/presenter.rb
+  - - app/renderer.rb
     - Card-style styled terminal output
     - light
     - purpose: Renders Session structs as styled terminal cards with dim separators, bold cyan titles, comma-formatted tokens.
@@ -78,11 +78,11 @@ files:
         - Truncation with "..." for long titles/paths
         - Comma formatting for token counts
       key_exports:
-        - Ocls::Presenter.new(width?, pastel?).render(sessions)
+        - Ocls::Renderer.new(width?, pastel?).render(sessions)
       reads_from:
-        - lib/ocls/session.rb
+        - app/structs.rb
 
-  - - lib/ocls/session.rb
+  - - app/structs.rb
     - Session data struct
     - light
     - purpose: Defines the Session struct used throughout the app. Pure data, no behavior.
@@ -91,7 +91,7 @@ files:
       key_exports:
         - Ocls::Session (title, location, agent, model, tokens, cost)
 
-  - - lib/ocls/version.rb
+  - - version.rb
     - VERSION constant
     - light
     - purpose: Single source of truth for the version string, used by gemspec and CLI.
@@ -111,45 +111,45 @@ files:
         - test_db_path helper
         - insert_test_session(db_path, attrs) helper
 
-  - - spec/ocls/database_spec.rb
+  - - spec/database_spec.rb
     - Database layer tests
     - light
     - purpose: Verifies query ordering, limit, model JSON extraction, nil model, empty title, missing DB error.
       reads_from:
-        - lib/ocls/database.rb
+        - app/database.rb
         - spec/spec_helper.rb
 
-  - - spec/ocls/presenter_spec.rb
-    - Presenter output tests
+  - - spec/renderer_spec.rb
+    - Renderer output tests
     - light
     - purpose: Verifies card rendering, separator format, comma formatting, truncation, cost format, empty input.
       reads_from:
-        - lib/ocls/presenter.rb
+        - app/renderer.rb
         - spec/spec_helper.rb
 
-  - - spec/ocls/cli_spec.rb
+  - - spec/cli_spec.rb
     - CLI command tests
     - light
     - purpose: Verifies list output, limit argument, version output, missing DB error handling.
       reads_from:
-        - lib/ocls/cli.rb
+        - app/cli.rb
         - spec/spec_helper.rb
 
-  - - spec/ocls/session_spec.rb
+  - - spec/session_spec.rb
     - Session struct tests
     - light
     - purpose: Verifies struct attributes and keyword_init support.
       reads_from:
-        - lib/ocls/session.rb
+        - app/structs.rb
 
-  - - spec/integration/ocls_spec.rb
+  - - spec/integration_spec.rb
     - End-to-end integration tests
     - light
     - purpose: Verifies full flow from DB query through styled output, matching the spec format.
       reads_from:
-        - lib/ocls/database.rb
-        - lib/ocls/presenter.rb
-        - lib/ocls/cli.rb
+        - app/database.rb
+        - app/renderer.rb
+        - app/cli.rb
         - spec/spec_helper.rb
 
   - - ocls.gemspec
@@ -184,6 +184,7 @@ files:
         - plugins: rubocop-rspec
         - Relaxed ExampleLength (20), MultipleExpectations (15)
         - DescribeClass excluded for integration specs
+        - SpecFilePathFormat disabled (flat spec structure)
 
   - - AGENTS.md
     - AI coworking guide

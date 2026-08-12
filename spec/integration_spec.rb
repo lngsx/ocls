@@ -41,8 +41,8 @@ RSpec.describe 'ocls end-to-end' do
   it 'renders styled card output matching the spec' do
     db = Ocls::Database.new(test_db_path)
     sessions = db.recent_sessions(limit: 15)
-    presenter = Ocls::Presenter.new(width: 80)
-    output = presenter.render(sessions)
+    renderer = Ocls::Renderer.new(width: 80)
+    output = renderer.render(sessions)
 
     # Verify structure
     expect(output).to include('Compare pacific-rails-6 and pacific repositories')
@@ -91,8 +91,8 @@ RSpec.describe 'ocls end-to-end' do
 
     db = Ocls::Database.new(empty_db_path)
     sessions = db.recent_sessions(limit: 15)
-    presenter = Ocls::Presenter.new
-    output = presenter.render(sessions)
+    renderer = Ocls::Renderer.new
+    output = renderer.render(sessions)
 
     expect(output).to eq('')
 

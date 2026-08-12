@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative 'ocls/version'
-require_relative 'ocls/session'
-require_relative 'ocls/database'
-require_relative 'ocls/presenter'
-require_relative 'ocls/cli'
+require_relative '../version'
+require_relative '../app/structs'
+require_relative '../app/database'
+require_relative '../app/renderer'
+require_relative '../app/cli'
 
 module Ocls
 end

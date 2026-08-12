@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'lib/ocls/version'
+require_relative 'version'
 
 Gem::Specification.new do |spec|
   spec.name = 'ocls'
@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.license = 'MIT'
   spec.required_ruby_version = '>= 3.0.0'
 
-  spec.files = Dir['lib/**/*.rb', 'bin/*', 'LICENSE.txt', 'README.md']
+  spec.files = Dir['app/**/*.rb', 'lib/**/*.rb', 'bin/*', 'version.rb', 'LICENSE.txt', 'README.md']
   spec.bindir = 'bin'
   spec.executables = ['ocls']
 

@@ -3,7 +3,7 @@
 require 'pastel'
 
 module Ocls
-  class Presenter
+  class Renderer
     DEFAULT_WIDTH = 80
     SEPARATOR_CHAR = "\u2500" # ─
 

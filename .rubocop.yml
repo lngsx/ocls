@@ -32,7 +32,10 @@ RSpec/MultipleExpectations:
 
 RSpec/DescribeClass:
   Exclude:
-    - "spec/integration/**/*"
+    - "spec/integration_spec.rb"
+
+RSpec/SpecFilePathFormat:
+  Enabled: false
 
 Lint/UselessConstantScoping:
   Enabled: false
