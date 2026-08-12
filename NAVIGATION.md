@@ -34,7 +34,7 @@ files:
       key_concepts:
         - require_relative load order
       key_exports:
-        - Ocls module
+        - loads all components via require_relative
 
   - - app/cli.rb
     - Thor CLI with list and version commands
@@ -45,7 +45,7 @@ files:
         - Numeric arg detection (ocls 30 → list 30)
         - exit_on_failure? for clean error exits
       key_exports:
-        - Ocls::CLI.start(ARGV)
+        - CLI.start(ARGV)
         - list [LIMIT] command (default 15)
         - version command
       reads_from:
@@ -62,8 +62,8 @@ files:
         - DatabaseNotFoundError for missing DB
         - Edge cases: nil model → "unknown", empty title → "(untitled)"
       key_exports:
-        - Ocls::Database.new(db_path?).recent_sessions(limit:)
-        - Ocls::DatabaseNotFoundError
+        - Database.new(db_path?).recent_sessions(limit:)
+        - DatabaseNotFoundError
       reads_from:
         - app/structs.rb
 
@@ -78,7 +78,7 @@ files:
         - Truncation with "..." for long titles/paths
         - Comma formatting for token counts
       key_exports:
-        - Ocls::Renderer.new(width?, pastel?).render(sessions)
+        - Renderer.new(width?, pastel?).render(sessions)
       reads_from:
         - app/structs.rb
 
@@ -89,14 +89,14 @@ files:
       key_concepts:
         - keyword_init Struct
       key_exports:
-        - Ocls::Session (title, location, agent, model, tokens, cost)
+        - Session (title, location, agent, model, tokens, cost)
 
   - - version.rb
     - VERSION constant
     - light
     - purpose: Single source of truth for the version string, used by gemspec and CLI.
       key_exports:
-        - Ocls::VERSION
+        - VERSION
 
   - - spec/spec_helper.rb
     - RSpec configuration and test helpers

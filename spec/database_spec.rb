@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Ocls::Database do
+RSpec.describe Database do
   describe '#recent_sessions' do
     context 'with a valid database' do
       before do
@@ -84,7 +84,7 @@ RSpec.describe Ocls::Database do
         db = described_class.new(test_db_path)
         sessions = db.recent_sessions(limit: 10)
 
-        expect(sessions).to all(be_a(Ocls::Session))
+        expect(sessions).to all(be_a(Session))
       end
 
       it 'handles empty title as (untitled)' do
@@ -105,7 +105,7 @@ RSpec.describe Ocls::Database do
       it 'raises DatabaseNotFoundError' do
         db = described_class.new('/nonexistent/path/db.sqlite')
 
-        expect { db.recent_sessions }.to raise_error(Ocls::DatabaseNotFoundError)
+        expect { db.recent_sessions }.to raise_error(DatabaseNotFoundError)
       end
     end
   end

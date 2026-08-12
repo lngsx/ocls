@@ -39,9 +39,9 @@ RSpec.describe 'ocls end-to-end' do
   end
 
   it 'renders styled card output matching the spec' do
-    db = Ocls::Database.new(test_db_path)
+    db = Database.new(test_db_path)
     sessions = db.recent_sessions(limit: 15)
-    renderer = Ocls::Renderer.new(width: 80)
+    renderer = Renderer.new(width: 80)
     output = renderer.render(sessions)
 
     # Verify structure
@@ -68,10 +68,10 @@ RSpec.describe 'ocls end-to-end' do
   end
 
   it 'handles the full CLI flow' do
-    db = Ocls::Database.new(test_db_path)
-    allow(Ocls::Database).to receive(:new).and_return(db)
+    db = Database.new(test_db_path)
+    allow(Database).to receive(:new).and_return(db)
 
-    expect { Ocls::CLI.start(%w[list 2]) }
+    expect { CLI.start(%w[list 2]) }
       .to output(/Content-Examiner/).to_stdout
   end
 
@@ -89,9 +89,9 @@ RSpec.describe 'ocls end-to-end' do
     SQL
     empty_db.close
 
-    db = Ocls::Database.new(empty_db_path)
+    db = Database.new(empty_db_path)
     sessions = db.recent_sessions(limit: 15)
-    renderer = Ocls::Renderer.new
+    renderer = Renderer.new
     output = renderer.render(sessions)
 
     expect(output).to eq('')

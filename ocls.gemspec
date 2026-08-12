@@ -4,7 +4,7 @@ require_relative 'version'
 
 Gem::Specification.new do |spec|
   spec.name = 'ocls'
-  spec.version = Ocls::VERSION
+  spec.version = VERSION
   spec.authors = ['luang']
   spec.summary = 'List recent opencode sessions from the terminal'
   spec.description = 'Queries the opencode SQLite database and prints styled session listings.'

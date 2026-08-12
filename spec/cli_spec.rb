@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Ocls::CLI do
+RSpec.describe CLI do
   describe '#list' do
     context 'with valid database' do
       before do
@@ -19,16 +19,16 @@ RSpec.describe Ocls::CLI do
 
       it 'prints session output to stdout' do
         # Stub Database.new to use test DB
-        db = Ocls::Database.new(test_db_path)
-        allow(Ocls::Database).to receive(:new).and_return(db)
+        db = Database.new(test_db_path)
+        allow(Database).to receive(:new).and_return(db)
 
         expect { described_class.start(['list']) }
           .to output(/CLI Test Session/).to_stdout
       end
 
       it 'accepts a numeric limit argument' do
-        db = Ocls::Database.new(test_db_path)
-        allow(Ocls::Database).to receive(:new).and_return(db)
+        db = Database.new(test_db_path)
+        allow(Database).to receive(:new).and_return(db)
 
         expect { described_class.start(%w[list 5]) }
           .to output(/CLI Test Session/).to_stdout
@@ -37,8 +37,8 @@ RSpec.describe Ocls::CLI do
 
     context 'with missing database' do
       it 'prints error to stderr and exits' do
-        db = Ocls::Database.new('/nonexistent/path/db.sqlite')
-        allow(Ocls::Database).to receive(:new).and_return(db)
+        db = Database.new('/nonexistent/path/db.sqlite')
+        allow(Database).to receive(:new).and_return(db)
 
         expect { described_class.start(['list']) }
           .to output(/Database not found/).to_stderr
@@ -50,7 +50,7 @@ RSpec.describe Ocls::CLI do
   describe '#version' do
     it 'prints the version' do
       expect { described_class.start(['version']) }
-        .to output(/ocls #{Ocls::VERSION}/).to_stdout
+        .to output(/ocls #{VERSION}/).to_stdout
     end
   end
 end

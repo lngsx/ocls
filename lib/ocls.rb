@@ -5,6 +5,3 @@ require_relative '../app/structs'
 require_relative '../app/database'
 require_relative '../app/renderer'
 require_relative '../app/cli'
-
-module Ocls
-end

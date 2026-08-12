@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Ocls::Session do
+RSpec.describe Session do
   describe 'attributes' do
     it 'has all required fields' do
       session = described_class.new(

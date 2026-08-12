@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe Ocls::Renderer do
+RSpec.describe Renderer do
   let(:pastel) { Pastel.new(enabled: false) }
   let(:renderer) { described_class.new(width: 80, pastel: pastel) }
 
   describe '#render' do
     let(:sessions) do
       [
-        Ocls::Session.new(
+        Session.new(
           title: 'Test Session',
           location: '/home/user/projects/test',
           agent: 'H',
@@ -36,7 +36,7 @@ RSpec.describe Ocls::Renderer do
     end
 
     it 'formats tokens with commas' do
-      big_session = Ocls::Session.new(
+      big_session = Session.new(
         title: 'Big Session',
         location: '/tmp',
         agent: 'H',
@@ -64,7 +64,7 @@ RSpec.describe Ocls::Renderer do
     context 'with long title' do
       it 'truncates with ...' do
         long_title = 'A' * 100
-        session = Ocls::Session.new(
+        session = Session.new(
           title: long_title,
           location: '/tmp',
           agent: 'H',
@@ -82,7 +82,7 @@ RSpec.describe Ocls::Renderer do
     context 'with long location' do
       it 'truncates with ...' do
         long_location = "/home/user/#{'a' * 100}"
-        session = Ocls::Session.new(
+        session = Session.new(
           title: 'Test',
           location: long_location,
           agent: 'H',
@@ -101,8 +101,8 @@ RSpec.describe Ocls::Renderer do
     context 'with multiple sessions' do
       it 'renders multiple cards with separators' do
         sessions = [
-          Ocls::Session.new(title: 'First', location: '/a', agent: 'H', model: 'x', tokens: 0, cost: 0.0),
-          Ocls::Session.new(title: 'Second', location: '/b', agent: 'H', model: 'x', tokens: 0, cost: 0.0)
+          Session.new(title: 'First', location: '/a', agent: 'H', model: 'x', tokens: 0, cost: 0.0),
+          Session.new(title: 'Second', location: '/b', agent: 'H', model: 'x', tokens: 0, cost: 0.0)
         ]
         output = renderer.render(sessions)
 
