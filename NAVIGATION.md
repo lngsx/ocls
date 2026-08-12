@@ -28,7 +28,7 @@ files:
         - lib/ocls.rb
 
   - - lib/ocls.rb
-    - Main module, requires all components
+    - Loader, requires all components
     - light
     - purpose: Single require point. Loads version, structs, database, renderer, cli in order.
       key_concepts:
@@ -83,13 +83,15 @@ files:
         - app/structs.rb
 
   - - app/structs.rb
-    - Session data struct
+    - Session data struct (dry-struct)
     - light
-    - purpose: Defines the Session struct used throughout the app. Pure data, no behavior.
+    - purpose: Defines the typed Session struct used throughout the app. Pure data, no behavior.
       key_concepts:
-        - keyword_init Struct
+        - Dry::Struct with strict types (String, Integer, Float)
+        - Types module from Dry.Types()
       key_exports:
         - Session (title, location, agent, model, tokens, cost)
+        - Types module
 
   - - version.rb
     - VERSION constant
@@ -138,7 +140,7 @@ files:
   - - spec/session_spec.rb
     - Session struct tests
     - light
-    - purpose: Verifies struct attributes and keyword_init support.
+    - purpose: Verifies Session struct attributes and keyword construction.
       reads_from:
         - app/structs.rb
 
@@ -155,9 +157,9 @@ files:
   - - ocls.gemspec
     - Gem specification
     - light
-    - purpose: Declares gem metadata, dependencies (sqlite3, thor, pastel, tty-screen), and dev dependencies (rspec, rubocop).
+    - purpose: Declares gem metadata, dependencies (dry-struct, sqlite3, thor, pastel, tty-screen), and dev dependencies (rspec, rubocop).
       key_concepts:
-        - Runtime deps: sqlite3, thor, pastel, tty-screen
+        - Runtime deps: dry-struct, sqlite3, thor, pastel, tty-screen
         - Dev deps: rake, rspec, rubocop, rubocop-rspec
 
   - - Gemfile
