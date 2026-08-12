@@ -1,0 +1,38 @@
+AllCops:
+  TargetRubyVersion: 3.0
+  NewCops: enable
+  SuggestExtensions: false
+  Exclude:
+    - "vendor/**/*"
+    - "tmp/**/*"
+
+plugins:
+  - rubocop-rspec
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+    - "*.gemspec"
+
+Metrics/MethodLength:
+  Exclude:
+    - "spec/**/*"
+
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/MultipleExpectations:
+  Max: 15
+
+RSpec/DescribeClass:
+  Exclude:
+    - "spec/integration/**/*"
+
+Lint/UselessConstantScoping:
+  Enabled: false
