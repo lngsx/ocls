@@ -1,6 +1,15 @@
+
+<p align="center">
+  <img width="400" height="503" alt="Image" src="https://github.com/user-attachments/assets/0b7739db-930f-4b00-9980-820e1c843347" />
+</p>
+
 # ocls
 
-ls opencode sessions across all projects, not directory-scoped like the built-in session list.
+`ls` opencode sessions across all projects, not directory-scoped like the built-in session list.
+
+## Why
+
+I sometimes work across multiple projects and directories in opencode, and when I do,I often lose track of where I started a session. There's no built-in or plugin way to see sessions across all projects in one place. `ocls` is a simple SQL query executor against the opencode SQLite database that prints the results in a readable format.
 
 ## What it does
 
@@ -14,7 +23,6 @@ Queries the opencode SQLite database and prints a styled, card-style list of rec
 ## Setup
 
 ```bash
-cd /path/to/ocls
 bundle install
 ```
 
@@ -41,12 +49,12 @@ bundle exec rubocop     # Linting only
   Compare pacific-rails-6 and pacific repositories
   Agent: H          Model: mimo-v2.5-pro
   Tokens: 46,729    Cost: $0.0235
-  Location: /home/luang/projects/pacific-rails-6
+  Location: /home/whatever/projects/pacific-rails-6
 ────────────────────────────────────────────────────────────────────────────
   Project logging system investigation
   Agent: H          Model: mimo-v2.5-pro
   Tokens: 22,126    Cost: $0.0106
-  Location: /home/luang/projects/pacific-rails-6
+  Location: /home/whatever/projects/pacific-rails-6
 ```
 
 ## License
