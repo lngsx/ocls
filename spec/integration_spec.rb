@@ -41,21 +41,24 @@ RSpec.describe 'ocls end-to-end' do
   it 'renders styled card output matching the spec' do
     db = Database.new(test_db_path)
     sessions = db.recent_sessions(limit: 15)
-    renderer = Renderer.new(width: 80)
+    renderer = Renderer.new
     output = renderer.render(sessions)
 
-    # Verify structure
+    # Verify titles
     expect(output).to include('Compare pacific-rails-6 and pacific repositories')
     expect(output).to include('Project logging system investigation')
     expect(output).to include('Content-Examiner Web Fetching: Reuse or Fork?')
 
-    # Verify fields
-    expect(output).to include('Agent: H')
-    expect(output).to include('Model: mimo-v2.5-pro')
-    expect(output).to include('Model: gpt-5.6-terra')
-    expect(output).to include('Tokens: 46,729')
-    expect(output).to include('Cost: $0.0235')
-    expect(output).to include('Cost: $1.8782')
+    # Verify model+cost on one line with divider
+    expect(output).to include("mimo-v2.5-pro \u254D $0.0235 (46,729)")
+    expect(output).to include("mimo-v2.5-pro \u254D $0.0106 (22,126)")
+    expect(output).to include("gpt-5.6-terra \u254D $1.8782 (19,159)")
+
+    # Verify no labels
+    expect(output).not_to include('Agent:')
+    expect(output).not_to include('Model:')
+    expect(output).not_to include('Tokens:')
+    expect(output).not_to include('Cost:')
 
     # Verify separator
     expect(output.scan("\u2500" * 80).length).to eq(3)

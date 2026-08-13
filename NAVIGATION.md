@@ -73,12 +73,13 @@ files:
     - purpose: Renders Session structs as styled terminal cards with dim separators, bold cyan titles, comma-formatted tokens.
       key_concepts:
         - Fixed 80-col width (DEFAULT_WIDTH)
-        - Unicode separator (U+2500)
+        - Unicode separator (U+2500) and model-cost divider (U+254D)
         - pastel gem for styling (bold.cyan, dim)
         - Truncation with "..." for long titles/paths
-        - Comma formatting for token counts
+        - Subagent detection via agent.include?("/")
+        - 4-line card: separator, title, model+cost, location
       key_exports:
-        - Renderer.new(width?, pastel?).render(sessions)
+        - Renderer.new(pastel?).render(sessions)
       reads_from:
         - app/structs.rb
 
@@ -157,9 +158,9 @@ files:
   - - ocls.gemspec
     - Gem specification
     - light
-    - purpose: Declares gem metadata, dependencies (dry-struct, sqlite3, thor, pastel, tty-screen), and dev dependencies (rspec, rubocop).
+    - purpose: Declares gem metadata, dependencies (dry-struct, sqlite3, thor, pastel), and dev dependencies (rspec, rubocop).
       key_concepts:
-        - Runtime deps: dry-struct, sqlite3, thor, pastel, tty-screen
+        - Runtime deps: dry-struct, sqlite3, thor, pastel
         - Dev deps: rake, rspec, rubocop, rubocop-rspec
 
   - - Gemfile

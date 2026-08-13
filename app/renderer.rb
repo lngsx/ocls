@@ -5,9 +5,9 @@ require 'pastel'
 class Renderer
   DEFAULT_WIDTH = 80
   SEPARATOR_CHAR = "\u2500" # ─
+  MODEL_COST_DIVIDER = "\u254D" # ╍
 
-  def initialize(width: DEFAULT_WIDTH, pastel: nil)
-    @width = width
+  def initialize(pastel: nil)
     @pastel = pastel || Pastel.new
   end
 
@@ -22,35 +22,30 @@ class Renderer
   def card_for(session)
     [
       separator,
-      title_line(session.title),
-      agent_model_line(session.agent, session.model),
-      tokens_cost_line(session.tokens, session.cost),
-      location_line(session.location)
+      title_line(session.title, session.agent),
+      location_line(session.location),
+      model_cost_line(session.model, session.tokens, session.cost)
     ].join("\n")
   end
 
   def separator
-    @pastel.dim(SEPARATOR_CHAR * @width)
+    @pastel.dim(SEPARATOR_CHAR * DEFAULT_WIDTH)
   end
 
-  def title_line(title)
-    truncated = truncate(title, @width - 4)
-    "  #{@pastel.bold.cyan(truncated)}"
+  def title_line(title, agent)
+    clean_title = title.sub(/\s*\([^)]*subagent[^)]*\)\s*$/, '')
+    suffix = agent.include?('/') ? ' (subagent)' : ''
+    "  #{@pastel.bold.cyan("#{clean_title}#{suffix}")}"
   end
 
-  def agent_model_line(agent, model)
-    "  Agent: #{agent}          Model: #{model}"
-  end
-
-  def tokens_cost_line(tokens, cost)
-    tokens_str = comma_format(tokens)
+  def model_cost_line(model, tokens, cost)
     cost_str = format('$%.4f', cost)
-    "  Tokens: #{tokens_str.ljust(11)} Cost: #{cost_str}"
+    tokens_str = comma_format(tokens)
+    "  #{model} #{MODEL_COST_DIVIDER} #{cost_str} (#{tokens_str})"
   end
 
   def location_line(location)
-    truncated = truncate(location, @width - 14)
-    "  #{@pastel.dim("Location: #{truncated}")}"
+    "  #{@pastel.dim(location)}"
   end
 
   def truncate(str, max_len)

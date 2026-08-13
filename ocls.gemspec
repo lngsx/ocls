@@ -19,7 +19,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'pastel', '~> 0.8'
   spec.add_dependency 'sqlite3', '~> 2.0'
   spec.add_dependency 'thor', '~> 1.0'
-  spec.add_dependency 'tty-screen', '~> 0.8'
 
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.0'

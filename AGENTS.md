@@ -35,10 +35,10 @@ The project is implemented and working. Your job is to maintain it, fix bugs, an
 ## Key Decisions
 
 1. **Ruby** with `app/` based structure (Rails-inspired)
-2. **Gems:** sqlite3, thor, pastel, tty-screen
+2. **Gems:** sqlite3, thor, pastel
 3. **RSpec** for testing, **RuboCop** for linting
 4. **Fixed 80-col width** — not responsive, truncates with `...`
-5. **Card-style output** — dim separator lines, bold cyan titles
+5. **Card-style output** — dim separator lines, bold cyan titles, 4-line cards (separator, title, location, model+cost)
 6. **Flat specs** — all specs in `spec/` root, no subdirectories
 
 ## How to Work

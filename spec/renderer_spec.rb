@@ -2,7 +2,7 @@
 
 RSpec.describe Renderer do
   let(:pastel) { Pastel.new(enabled: false) }
-  let(:renderer) { described_class.new(width: 80, pastel: pastel) }
+  let(:renderer) { described_class.new(pastel: pastel) }
 
   describe '#render' do
     let(:sessions) do
@@ -18,21 +18,37 @@ RSpec.describe Renderer do
       ]
     end
 
-    it 'renders a card with separator, title, agent/model, tokens/cost, location' do
+    it 'renders a card with separator, title, model+cost, location' do
       output = renderer.render(sessions)
 
       expect(output).to include('Test Session')
-      expect(output).to include('Agent: H')
-      expect(output).to include('Model: mimo-v2.5-pro')
-      expect(output).to include('Tokens: 1,500')
-      expect(output).to include('Cost: $0.0123')
-      expect(output).to include('Location: /home/user/projects/test')
+      expect(output).to include('/home/user/projects/test')
+      expect(output).to include('mimo-v2.5-pro')
+      expect(output).to include('$0.0123')
+      expect(output).to include('(1,500)')
+    end
+
+    it 'does not include field labels' do
+      output = renderer.render(sessions)
+
+      expect(output).not_to include('Agent:')
+      expect(output).not_to include('Model:')
+      expect(output).not_to include('Tokens:')
+      expect(output).not_to include('Cost:')
+      expect(output).not_to include('Location:')
     end
 
     it 'uses Unicode box-drawing separator' do
       output = renderer.render(sessions)
 
       expect(output).to include("\u2500" * 80)
+    end
+
+    it 'uses heavy dashed divider between model and cost' do
+      output = renderer.render(sessions)
+
+      expect(output).to include("\u254D")
+      expect(output).to include("mimo-v2.5-pro \u254D $0.0123 (1,500)")
     end
 
     it 'formats tokens with commas' do
@@ -46,55 +62,18 @@ RSpec.describe Renderer do
       )
       output = renderer.render([big_session])
 
-      expect(output).to include('Tokens: 123,456')
+      expect(output).to include('(123,456)')
     end
 
     it 'formats cost to 4 decimal places' do
       output = renderer.render(sessions)
 
-      expect(output).to include('Cost: $0.0123')
+      expect(output).to include('$0.0123')
     end
 
     context 'with empty sessions' do
       it 'returns empty string' do
         expect(renderer.render([])).to eq('')
-      end
-    end
-
-    context 'with long title' do
-      it 'truncates with ...' do
-        long_title = 'A' * 100
-        session = Session.new(
-          title: long_title,
-          location: '/tmp',
-          agent: 'H',
-          model: 'test',
-          tokens: 0,
-          cost: 0.0
-        )
-        output = renderer.render([session])
-
-        expect(output).to include('...')
-        expect(output).not_to include(long_title)
-      end
-    end
-
-    context 'with long location' do
-      it 'truncates with ...' do
-        long_location = "/home/user/#{'a' * 100}"
-        session = Session.new(
-          title: 'Test',
-          location: long_location,
-          agent: 'H',
-          model: 'test',
-          tokens: 0,
-          cost: 0.0
-        )
-        output = renderer.render([session])
-
-        expect(output).to include('Location:')
-        # The location line should be truncated
-        expect(output.lines.any? { |l| l.include?('Location:') && l.include?('...') }).to be true
       end
     end
 
@@ -109,6 +88,70 @@ RSpec.describe Renderer do
         expect(output.scan("\u2500" * 80).length).to eq(2)
         expect(output).to include('First')
         expect(output).to include('Second')
+      end
+    end
+
+    context 'with subagent' do
+      it 'suffixes title with (subagent)' do
+        session = Session.new(
+          title: 'Fetch docs',
+          location: '/tmp',
+          agent: 'subagents/url-examiner',
+          model: 'deepseek-v4-flash',
+          tokens: 15_590,
+          cost: 0.0024
+        )
+        output = renderer.render([session])
+
+        expect(output).to include('Fetch docs (subagent)')
+      end
+
+      it 'does not show the raw agent path' do
+        session = Session.new(
+          title: 'Fetch docs',
+          location: '/tmp',
+          agent: 'subagents/url-examiner',
+          model: 'deepseek-v4-flash',
+          tokens: 15_590,
+          cost: 0.0024
+        )
+        output = renderer.render([session])
+
+        expect(output).not_to include('subagents/url-examiner')
+      end
+    end
+
+    context 'with main agent' do
+      it 'does not suffix title' do
+        session = Session.new(
+          title: 'Test Session',
+          location: '/tmp',
+          agent: 'H',
+          model: 'mimo-v2.5-pro',
+          tokens: 1000,
+          cost: 0.01
+        )
+        output = renderer.render([session])
+
+        expect(output).to include('Test Session')
+        expect(output).not_to include('(subagent)')
+      end
+    end
+
+    context 'with title containing existing subagent suffix' do
+      it 'strips the existing suffix and uses clean suffix' do
+        session = Session.new(
+          title: 'Fetch dry-struct docs (@subagents/url-examiner subagent)',
+          location: '/tmp',
+          agent: 'subagents/url-examiner',
+          model: 'deepseek-v4-flash',
+          tokens: 15_590,
+          cost: 0.0024
+        )
+        output = renderer.render([session])
+
+        expect(output).to include('Fetch dry-struct docs (subagent)')
+        expect(output).not_to include('(@subagents/url-examiner subagent)')
       end
     end
   end
