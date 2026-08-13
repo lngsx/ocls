@@ -9,11 +9,19 @@ A conversation/work unit in opencode. Has a title, directory, agent, model, toke
 _Avoid_: conversation, chat, thread
 
 **Agent**:
-The AI agent that handled a session. Short string like `H` or `subagents/url-examiner`. If the agent string contains `/`, it is a subagent and the title is suffixed with `(subagent)`. Main agents are not displayed.
+The AI agent that handled a session. Short string like `H` or `subagents/url-examiner`. If the agent string contains `/`, the title is suffixed with `(subagent)`; main agents get no suffix.
 _Avoid_: worker, bot
 
+**Main agent session**:
+A top-level session whose `parent_id` is null. These are the sessions shown by default.
+_Avoid_: primary session, root session
+
+**Subagent session**:
+A child session whose `parent_id` points to a main agent session. Excluded by default; included with `--all`.
+_Avoid_: child session, sub-session
+
 **Subagent**:
-An agent whose identifier contains `/` (e.g., `subagents/url-examiner`). Distinguished from main agents by appending `(subagent)` to the card title.
+An agent identifier containing `/` (e.g., `subagents/url-examiner`). The display heuristic used to append `(subagent)` to the card title. Not equivalent to a subagent session — e.g., `explore` is a subagent session whose identifier has no `/`.
 
 **Model**:
 The AI model used for a session. Stored as JSON with a provider-prefixed ID (e.g., `{"id":"openrouter/xiaomi/mimo-v2.5-pro","providerID":"openrouter"}`). Displayed as the short name after the last `/`.

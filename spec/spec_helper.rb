@@ -32,6 +32,7 @@ RSpec.configure do |config|
         version TEXT NOT NULL,
         time_created INTEGER NOT NULL,
         time_updated INTEGER NOT NULL,
+        parent_id TEXT,
         agent TEXT,
         model TEXT,
         cost REAL DEFAULT 0 NOT NULL,

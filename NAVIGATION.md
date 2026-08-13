@@ -43,10 +43,11 @@ files:
       key_concepts:
         - Thor subclass with default_task
         - Numeric arg detection (ocls 30 → list 30)
+        - --all flag to include subagent sessions (default: main only)
         - exit_on_failure? for clean error exits
       key_exports:
         - CLI.start(ARGV)
-        - list [LIMIT] command (default 15)
+        - list [LIMIT] command (default 15, main-only)
         - version command
       reads_from:
         - app/database.rb
@@ -61,8 +62,9 @@ files:
         - JSON extraction for model field
         - DatabaseNotFoundError for missing DB
         - Edge cases: nil model → "unknown", empty title → "(untitled)"
+        - Main-only filter (parent_id IS NULL) by default; include_subagents param adds subagent sessions
       key_exports:
-        - Database.new(db_path?).recent_sessions(limit:)
+        - Database.new(db_path?).recent_sessions(limit:, include_subagents:)
         - DatabaseNotFoundError
       reads_from:
         - app/structs.rb

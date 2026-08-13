@@ -40,6 +40,7 @@ The project is implemented and working. Your job is to maintain it, fix bugs, an
 4. **Fixed 80-col width** — not responsive, truncates with `...`
 5. **Card-style output** — dim separator lines, bold cyan titles, 4-line cards (separator, title, location, model+cost)
 6. **Flat specs** — all specs in `spec/` root, no subdirectories
+7. **Main-agent-only by default** — `ocls list` shows only sessions with `parent_id IS NULL`; `--all` includes subagent sessions
 
 ## How to Work
 
@@ -50,6 +51,5 @@ The project is implemented and working. Your job is to maintain it, fix bugs, an
 
 ## Deferred (v2+)
 
-- Agent filtering mode (`ocls --main` to exclude subagents)
 - Configurable DB path via env var (`OPENCODE_DB`)
 - Sorting options (by cost, by tokens)

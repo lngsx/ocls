@@ -15,6 +15,13 @@ RSpec.describe CLI do
                               'cost' => 0.01,
                               'time_created' => 5000
                             })
+        insert_test_session(test_db_path, {
+                              'id' => 'cli-session-2',
+                              'title' => 'Explore something',
+                              'agent' => 'explore',
+                              'parent_id' => 'cli-session-1',
+                              'time_created' => 6000
+                            })
       end
 
       it 'prints session output to stdout' do
@@ -32,6 +39,22 @@ RSpec.describe CLI do
 
         expect { described_class.start(%w[list 5]) }
           .to output(/CLI Test Session/).to_stdout
+      end
+
+      it 'excludes subagent sessions by default' do
+        db = Database.new(test_db_path)
+        allow(Database).to receive(:new).and_return(db)
+
+        expect { described_class.start(['list']) }
+          .not_to output(/Explore something/).to_stdout
+      end
+
+      it 'includes subagent sessions with --all' do
+        db = Database.new(test_db_path)
+        allow(Database).to receive(:new).and_return(db)
+
+        expect { described_class.start(%w[list --all]) }
+          .to output(/Explore something/).to_stdout
       end
     end
 

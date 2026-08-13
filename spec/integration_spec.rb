@@ -36,6 +36,14 @@ RSpec.describe 'ocls end-to-end' do
                           'cost' => 1.8782,
                           'time_created' => 3000
                         })
+    insert_test_session(test_db_path, {
+                          'id' => 'e2e-4',
+                          'title' => 'Explore project structure',
+                          'directory' => '/home/luang/projects/pacific-rails-6',
+                          'agent' => 'explore',
+                          'parent_id' => 'e2e-1',
+                          'time_created' => 4000
+                        })
   end
 
   it 'renders styled card output matching the spec' do
@@ -78,6 +86,16 @@ RSpec.describe 'ocls end-to-end' do
       .to output(/Content-Examiner/).to_stdout
   end
 
+  it 'excludes subagent sessions by default and includes them with --all' do
+    db = Database.new(test_db_path)
+
+    main_sessions = db.recent_sessions(limit: 15)
+    expect(main_sessions.map(&:title)).not_to include('Explore project structure')
+
+    all_sessions = db.recent_sessions(limit: 15, include_subagents: true)
+    expect(all_sessions.map(&:title)).to include('Explore project structure')
+  end
+
   it 'prints nothing for empty results' do
     # Use a fresh empty DB
     require 'tmpdir'
@@ -87,7 +105,7 @@ RSpec.describe 'ocls end-to-end' do
       CREATE TABLE session (
         id TEXT PRIMARY KEY, project_id TEXT, slug TEXT, directory TEXT,
         title TEXT, version TEXT, time_created INTEGER, time_updated INTEGER,
-        agent TEXT, model TEXT, cost REAL, tokens_input INTEGER, tokens_output INTEGER
+        parent_id TEXT, agent TEXT, model TEXT, cost REAL, tokens_input INTEGER, tokens_output INTEGER
       );
     SQL
     empty_db.close

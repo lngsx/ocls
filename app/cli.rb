@@ -6,12 +6,13 @@ class CLI < Thor
   DEFAULT_LIMIT = 15
 
   desc 'list [LIMIT]', "List recent opencode sessions (default: #{DEFAULT_LIMIT})"
+  option :all, type: :boolean, default: false, desc: 'Include subagent sessions'
   def list(limit = DEFAULT_LIMIT)
     limit = limit.to_i
     limit = DEFAULT_LIMIT if limit <= 0
 
     db = Database.new
-    sessions = db.recent_sessions(limit: limit)
+    sessions = db.recent_sessions(limit: limit, include_subagents: options[:all])
     renderer = Renderer.new
     $stdout.print renderer.render(sessions)
   rescue DatabaseNotFoundError => e

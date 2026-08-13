@@ -20,6 +20,8 @@ Queries the opencode SQLite database and prints a styled, card-style list of rec
 - Token count and cost
 - Project directory
 
+Subagent sessions (child sessions with a `parent_id`) are excluded by default; pass `--all` to include them.
+
 ## Setup
 
 ```bash
@@ -29,9 +31,24 @@ bundle install
 ## Usage
 
 ```bash
-bin/ocls          # Show 15 most recent sessions
-bin/ocls 30       # Show 30 most recent sessions
-bin/ocls version  # Print version
+bin/ocls           # Show 15 most recent main-agent sessions
+bin/ocls 30        # Show 30 most recent main-agent sessions
+bin/ocls --all     # Include subagent sessions
+bin/ocls 30 --all  # Show 30 sessions, including subagents
+```
+
+Example output:
+
+```
+────────────────────────────────────────────────────────────────────────────────
+  Compare pacific-rails-6 and pacific repositories
+  /home/whatever/projects/pacific-rails-6
+  mimo-v2.5-pro ╍ $0.0235 (46,729)
+────────────────────────────────────────────────────────────────────────────────
+  Project logging system investigation
+  /home/whatever/projects/pacific-rails-6
+  mimo-v2.5-pro ╍ $0.0106 (22,126)
+────────────────────────────────────────────────────────────────────────────────
 ```
 
 ## Development
@@ -40,21 +57,6 @@ bin/ocls version  # Print version
 bundle exec rake        # Run tests + linting
 bundle exec rspec       # Tests only
 bundle exec rubocop     # Linting only
-```
-
-## Example Output
-
-```
-────────────────────────────────────────────────────────────────────────────
-  Compare pacific-rails-6 and pacific repositories
-  Agent: H          Model: mimo-v2.5-pro
-  Tokens: 46,729    Cost: $0.0235
-  Location: /home/whatever/projects/pacific-rails-6
-────────────────────────────────────────────────────────────────────────────
-  Project logging system investigation
-  Agent: H          Model: mimo-v2.5-pro
-  Tokens: 22,126    Cost: $0.0106
-  Location: /home/whatever/projects/pacific-rails-6
 ```
 
 ## License

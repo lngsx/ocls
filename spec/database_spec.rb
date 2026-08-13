@@ -101,6 +101,53 @@ RSpec.describe Database do
       end
     end
 
+    context 'when filtering subagent sessions' do
+      before do
+        insert_test_session(test_db_path, {
+                              'id' => 'main-1',
+                              'title' => 'Main Session',
+                              'agent' => 'H',
+                              'time_created' => 1000
+                            })
+        insert_test_session(test_db_path, {
+                              'id' => 'subagent-1',
+                              'title' => 'Explore codebase',
+                              'agent' => 'explore',
+                              'parent_id' => 'main-1',
+                              'time_created' => 2000
+                            })
+        insert_test_session(test_db_path, {
+                              'id' => 'subagent-2',
+                              'title' => 'Web fetch',
+                              'agent' => 'subagents/url-examiner',
+                              'parent_id' => 'main-1',
+                              'time_created' => 3000
+                            })
+      end
+
+      it 'excludes subagent sessions by default' do
+        db = described_class.new(test_db_path)
+        sessions = db.recent_sessions(limit: 10)
+
+        expect(sessions.map(&:title)).to eq(['Main Session'])
+      end
+
+      it 'includes subagent sessions when include_subagents is true' do
+        db = described_class.new(test_db_path)
+        sessions = db.recent_sessions(limit: 10, include_subagents: true)
+
+        expect(sessions.map(&:title)).to eq(['Web fetch', 'Explore codebase', 'Main Session'])
+      end
+
+      it 'applies limit after filtering' do
+        db = described_class.new(test_db_path)
+        sessions = db.recent_sessions(limit: 2, include_subagents: true)
+
+        expect(sessions.length).to eq(2)
+        expect(sessions.map(&:title)).to eq(['Web fetch', 'Explore codebase'])
+      end
+    end
+
     context 'with a missing database' do
       it 'raises DatabaseNotFoundError' do
         db = described_class.new('/nonexistent/path/db.sqlite')
